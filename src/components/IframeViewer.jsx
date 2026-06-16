@@ -8,14 +8,26 @@ const IframeViewer = ({ serviceUrl, title }) => {
     return <div style={{ padding: '2rem', color: 'var(--error)' }}>Error: Service URL not configured.</div>;
   }
 
-  // Ensure the URL points to the gateway host (e.g. localhost:8180) instead of the frontend host
-  const baseUrl = import.meta.env.API_BASE_URL || '';
+  // Ensure the URL points to the gateway host instead of the frontend host
+  const baseUrl = window.ENV_CONFIG?.API_BASE_URL || import.meta.env.API_BASE_URL || '';
   let fullServiceUrl = serviceUrl;
   
   if (serviceUrl.startsWith('/') && !serviceUrl.startsWith('http')) {
-    // Remove trailing slash from baseUrl if it exists to avoid double slashes
-    const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-    fullServiceUrl = `${cleanBaseUrl}${serviceUrl}`;
+    // If the base URL is absolute, resolve relative paths to its origin (domain)
+    // rather than appending to its path (which might include '/api')
+    if (baseUrl.startsWith('http')) {
+      try {
+        const origin = new URL(baseUrl).origin;
+        fullServiceUrl = `${origin}${serviceUrl}`;
+      } catch (e) {
+        const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+        fullServiceUrl = `${cleanBaseUrl}${serviceUrl}`;
+      }
+    } else {
+      // Relative base URL
+      const cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+      fullServiceUrl = `${cleanBaseUrl}${serviceUrl}`;
+    }
   }
 
   // Dynamically append the token to the URL as per requirements
