@@ -17,7 +17,6 @@ export const useAuthStore = create((set) => ({
     isAuthenticated: false 
   }),
 
-  // Method to update only the token (used after refresh)
   updateToken: (token) => set({ 
     accessToken: token 
   }),

@@ -20,17 +20,15 @@ const LoginPage = () => {
     setError('');
 
     try {
-      // Using VITE_LOGIN_URL from .env
-      const response = await client.post(import.meta.env.VITE_LOGIN_URL || '/auth/login', {
+      const response = await client.post(import.meta.env.LOGIN_URL || '/auth/login', {
         email,
         password,
-        rememberMe: String(rememberMe) // Sending as string "false"/"true" as per user example
+        rememberMe: String(rememberMe)
       });
 
       const { accessToken } = response.data.data;
       const user = response.data.data.user;
 
-      // Save to in-memory store
       setAuth(accessToken, user || { username: email.split('@')[0] });
 
       setIsLoading(false);
@@ -51,11 +49,10 @@ const LoginPage = () => {
     <div className="login-page">
       <div className="login-card glass-card">
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <div style={{ display: 'inline-flex', background: 'var(--accent)', padding: '1rem', borderRadius: '1rem', marginBottom: '1rem', boxShadow: '0 0 20px rgba(99, 102, 241, 0.4)' }}>
-            <ShieldCheck size={32} color="white" />
-          </div>
-          <h2 style={{ fontSize: '1.75rem', fontWeight: 800 }}>Admin Login</h2>
-          <p style={{ color: 'var(--text-muted)', marginTop: '0.5rem' }}>Enter your credentials to access the panel</p>
+          <h1 style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '0.02em', color: 'var(--text-primary)', display: 'inline-flex', alignItems: 'baseline', gap: '0.15rem', marginBottom: '0.5rem' }}>
+            RESHALA<span style={{ fontSize: '1rem', fontWeight: 400, color: 'var(--text-secondary)' }}>admin</span>
+          </h1>
+          <p style={{ color: 'var(--text-muted)' }}>Вход в панель администратора</p>
         </div>
 
         {error && (

@@ -8,7 +8,9 @@ import {
   LogOut,
   ShieldCheck,
   RefreshCw,
-  Activity
+  Activity,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 import axios from 'axios';
@@ -19,6 +21,19 @@ const Layout = () => {
   const updateToken = useAuthStore((state) => state.updateToken);
   const accessToken = useAuthStore((state) => state.accessToken);
   const user = useAuthStore((state) => state.user);
+
+  const [theme, setTheme] = React.useState(() => {
+    return localStorage.getItem('theme') || 'dark';
+  });
+
+  React.useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
 
   // Background refresh logic
   React.useEffect(() => {
@@ -58,11 +73,10 @@ const Layout = () => {
     <div className="app-container">
       <aside className="sidebar">
         <div className="nav-group" style={{ marginBottom: '3rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0 0.75rem' }}>
-            <div style={{ background: 'var(--accent)', padding: '0.5rem', borderRadius: '0.5rem' }}>
-              <ShieldCheck size={24} color="white" />
-            </div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Reshala Admin</h1>
+          <div style={{ display: 'flex', alignItems: 'center', padding: '0 0.75rem' }}>
+            <h1 style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '0.02em', color: 'var(--text-primary)', display: 'flex', alignItems: 'baseline', gap: '0.15rem' }}>
+              RESHALA<span style={{ fontSize: '0.8rem', fontWeight: 400, color: 'var(--text-secondary)' }}>admin</span>
+            </h1>
           </div>
         </div>
 
@@ -84,10 +98,6 @@ const Layout = () => {
             <MessageSquare size={18} />
             RabbitMQ
           </NavLink>
-          <NavLink to="/admin/view/dozzle" className="nav-link">
-            <Activity size={18} />
-            Dozzle Monitoring
-          </NavLink>
           <NavLink to="/admin/view/swagger" className="nav-link">
             <FileCode size={18} />
             API Swagger
@@ -107,10 +117,18 @@ const Layout = () => {
           <div style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>
             Welcome back, <span style={{ color: 'var(--text-primary)' }}>{user?.username || 'Admin'}</span>
           </div>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
             <button 
               className="btn" 
-              style={{ padding: '0.5rem', background: 'var(--glass)', color: 'var(--text-secondary)' }}
+              style={{ padding: '0.5rem', background: 'var(--glass)', color: 'var(--text-secondary)', border: '1px solid var(--glass-border)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '0.375rem' }}
+              onClick={toggleTheme}
+              title={theme === 'dark' ? "Светлая тема" : "Темная тема"}
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <button 
+              className="btn" 
+              style={{ padding: '0.5rem', background: 'var(--glass)', color: 'var(--text-secondary)', border: '1px solid var(--glass-border)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '0.375rem' }}
               onClick={() => {
                 // Trigger a refresh manually
                 const event = new CustomEvent('manual-refresh');
@@ -120,7 +138,7 @@ const Layout = () => {
             >
               <RefreshCw size={18} />
             </button>
-            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.8rem' }}>
+            <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--accent)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.8rem' }}>
               AD
             </div>
           </div>

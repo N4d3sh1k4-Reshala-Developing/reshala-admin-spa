@@ -1,26 +1,24 @@
 import React from 'react';
-import { useAuthStore } from '../store/authStore';
+import IframeViewer from '../components/IframeViewer';
 
 const DashboardPage = () => {
-  const user = useAuthStore((state) => state.user);
-
   return (
-    <div style={{ padding: '2rem' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>System Dashboard</h2>
-        <p style={{ color: 'var(--text-secondary)' }}>Welcome to the Reshala Admin Panel.</p>
-      </div>
-
-      <div className="glass-card" style={{ padding: '2rem', textAlign: 'center', marginTop: '4rem' }}>
-        <h3 style={{ marginBottom: '1rem', fontSize: '1.25rem', color: 'var(--text-primary)' }}>
-          Welcome back, {user?.username || 'Admin'}!
-        </h3>
-        <p style={{ color: 'var(--text-muted)' }}>
-          Use the sidebar to navigate to external services such as MinIO, RabbitMQ, Swagger UI, and Dozzle Monitoring.
+    <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', height: 'calc(100vh - 64px)', boxSizing: 'border-box' }}>
+      <div>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
+          Мониторинг логов (Dozzle)
+        </h2>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+          Просмотр логов контейнеров в реальном времени.
         </p>
+      </div>
+      
+      <div className="glass-card" style={{ padding: '0', overflow: 'hidden', flex: 1, background: 'var(--bg-card)' }}>
+        <IframeViewer serviceUrl={import.meta.env.DOZZLE_URL} title="Dozzle Logs" />
       </div>
     </div>
   );
 };
 
 export default DashboardPage;
+
