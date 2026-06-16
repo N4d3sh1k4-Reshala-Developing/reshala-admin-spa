@@ -1,0 +1,16 @@
+services:
+  reshala-admin-spa:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reshala-admin-spa
+    restart: unless-stopped
+    ports:
+      - "8186:80"
+    environment:
+      - API_BASE_URL=${API_BASE_URL}
+      - MINIO_URL=${MINIO_URL}
+      - RABBIT_URL=${RABBIT_URL}
+      - SWAGGER_URL=${SWAGGER_URL}
+      - LOGIN_URL=${LOGIN_URL}
+      - DOZZLE_URL=${DOZZLE_URL}

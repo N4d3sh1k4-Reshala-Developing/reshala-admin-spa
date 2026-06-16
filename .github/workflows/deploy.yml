@@ -1,0 +1,47 @@
+name: Deploy Admin SPA
+
+on:
+  push:
+    branches: [main]
+
+env:
+  PROJECT_ROOT: "/home/${{ secrets.SERVER_USER }}/reshala-project"
+  SERVICE_NAME: "reshala-admin-spa"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Copy files via SCP
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_TAILSCALE_IP }} "mkdir -p ${{ env.PROJECT_ROOT }}"
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r ./* ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_TAILSCALE_IP }}:${{ env.PROJECT_ROOT }}/
+
+      - name: Deploy via SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_TAILSCALE_IP }} << 'EOF'
+            cd ${{ env.PROJECT_ROOT }}/${{ env.SERVICE_NAME }}
+
+            echo "API_BASE_URL=${{ env.API_BASE_URL }}" > .env
+            echo "MINIO_URL=${{ env.MINIO_URL }}" > .env
+            echo "RABBIT_URL=${{ env.RABBIT_URL }}" > .env
+            echo "SWAGGER_URL=${{ env.SWAGGER_URL }}" > .env
+            echo "LOGIN_URL=${{ env.LOGIN_URL }}" > .env
+            echo "DOZZLE_URL=${{ env.DOZZLE_URL }}" > .env
+
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            
+            docker compose up --build -d --remove-orphans
+          EOF
