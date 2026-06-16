@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShieldCheck, Lock, Mail, Loader2 } from 'lucide-react';
+import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
-import client from '../api/client';
+import client, { resolveUrl } from '../api/client';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -20,18 +21,15 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const loginUrl = window.ENV_CONFIG?.LOGIN_URL || import.meta.env.VITE_LOGIN_URL || '/auth/login';
-      console.log('Login URL:', loginUrl);
+      const loginUrl = window.ENV_CONFIG?.LOGIN_URL || import.meta.env.VITE_LOGIN_URL || '/api/v0/auth/login';
+      const resolvedUrl = resolveUrl(loginUrl);
+      console.log('Login URL:', resolvedUrl);
       
-      const response = await client({
-        method: 'POST',
-        url: loginUrl,
-        data: {
-          email,
-          password,
-          rememberMe: String(rememberMe)
-        }
-      });
+      // Use axios directly for absolute URLs, client for relative
+      const response = await (loginUrl.startsWith('http') 
+        ? axios.post(resolvedUrl, { email, password, rememberMe: String(rememberMe) }, { withCredentials: true })
+        : client.post(loginUrl, { email, password, rememberMe: String(rememberMe) })
+      );
 
       const { accessToken } = response.data.data;
       const user = response.data.data.user;

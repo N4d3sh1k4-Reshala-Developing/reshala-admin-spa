@@ -18,6 +18,14 @@ const client = axios.create({
   withCredentials: true,
 });
 
+// Helper to resolve URLs - if relative, prepend baseURL
+export const resolveUrl = (url) => {
+  if (!url) return url;
+  if (url.startsWith('http')) return url; // Already absolute
+  if (url.startsWith('/')) return getBaseURL() + url; // Relative path
+  return getBaseURL() + '/' + url; // Relative without /
+};
+
 client.interceptors.request.use((config) => {
   const token = useAuthStore.getState().accessToken;
   if (token) {
