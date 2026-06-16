@@ -26,8 +26,8 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_TAILSCALE_IP }} "mkdir -p ${{ env.PROJECT_ROOT }}"
-          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r ./* ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_TAILSCALE_IP }}:${{ env.PROJECT_ROOT }}/
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_TAILSCALE_IP }} "mkdir -p ${{ env.PROJECT_ROOT }}/${{ env.SERVICE_NAME }}"
+          scp -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa -r ./* ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_TAILSCALE_IP }}:${{ env.PROJECT_ROOT }}/${{ env.SERVICE_NAME }}/
 
       - name: Deploy via SSH
         run: |
