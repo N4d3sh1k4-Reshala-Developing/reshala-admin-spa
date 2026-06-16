@@ -25,16 +25,16 @@ function App() {
         }>
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="view/minio" element={
-            <IframeViewer serviceUrl={import.meta.env.VITE_MINIO_URL} title="MinIO Console" />
+            <IframeViewer serviceUrl={import.meta.env.MINIO_URL} title="MinIO Console" />
           } />
           <Route path="view/rabbit" element={
-            <IframeViewer serviceUrl={import.meta.env.VITE_RABBIT_URL} title="RabbitMQ Management" />
+            <IframeViewer serviceUrl={import.meta.env.RABBIT_URL} title="RabbitMQ Management" />
           } />
           <Route path="view/dozzle" element={
-            <IframeViewer serviceUrl={import.meta.env.VITE_DOZZLE_URL} title="Dozzle Monitoring" />
+            <IframeViewer serviceUrl={import.meta.env.DOZZLE_URL} title="Dozzle Monitoring" />
           } />
           <Route path="view/swagger" element={
-            <IframeViewer serviceUrl={import.meta.env.VITE_SWAGGER_URL} title="API Documentation" />
+            <IframeViewer serviceUrl={import.meta.env.SWAGGER_URL} title="API Documentation" />
           } />
           <Route index element={<Navigate to="dashboard" replace />} />
         </Route>

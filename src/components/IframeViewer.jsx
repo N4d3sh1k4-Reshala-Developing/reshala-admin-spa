@@ -9,7 +9,7 @@ const IframeViewer = ({ serviceUrl, title }) => {
   }
 
   // Ensure the URL points to the gateway host (e.g. localhost:8180) instead of the frontend host
-  const baseUrl = import.meta.env.VITE_API_BASE_URL || '';
+  const baseUrl = import.meta.env.API_BASE_URL || '';
   let fullServiceUrl = serviceUrl;
   
   if (serviceUrl.startsWith('/') && !serviceUrl.startsWith('http')) {
