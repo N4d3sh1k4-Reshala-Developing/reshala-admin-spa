@@ -5,8 +5,8 @@ import { useAuthStore } from '../store/authStore';
 import client from '../api/client';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('vusezet@gmail.com');
-  const [password, setPassword] = useState('Aab123@45678');
+  const [email, setEmail] = useState(false);
+  const [password, setPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
