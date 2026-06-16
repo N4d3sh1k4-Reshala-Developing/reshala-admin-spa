@@ -8,7 +8,12 @@ RUN npm run build
 
 # Production stage
 FROM nginx:alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+RUN apk add --no-cache envsubst
+COPY nginx.conf /etc/nginx/templates/default.conf.template
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 COPY --from=builder /app/dist /usr/share/nginx/html
+
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+ENTRYPOINT ["/docker-entrypoint.sh"]

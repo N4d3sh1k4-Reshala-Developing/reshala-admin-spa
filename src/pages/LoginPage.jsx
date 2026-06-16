@@ -5,8 +5,8 @@ import { useAuthStore } from '../store/authStore';
 import client from '../api/client';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState(false);
-  const [password, setPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -20,10 +20,17 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const response = await client.post(import.meta.env.LOGIN_URL || '/auth/login', {
-        email,
-        password,
-        rememberMe: String(rememberMe)
+      const loginUrl = window.ENV_CONFIG?.LOGIN_URL || import.meta.env.VITE_LOGIN_URL || '/auth/login';
+      console.log('Login URL:', loginUrl);
+      
+      const response = await client({
+        method: 'POST',
+        url: loginUrl,
+        data: {
+          email,
+          password,
+          rememberMe: String(rememberMe)
+        }
       });
 
       const { accessToken } = response.data.data;

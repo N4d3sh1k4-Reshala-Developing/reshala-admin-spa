@@ -1,8 +1,20 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 
+const getBaseURL = () => {
+  // Runtime env from nginx
+  if (window.ENV_CONFIG?.API_BASE_URL) {
+    return window.ENV_CONFIG.API_BASE_URL;
+  }
+  // Build-time env for development
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  return '/api';
+};
+
 const client = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
+  baseURL: getBaseURL(),
   withCredentials: true,
 });
 

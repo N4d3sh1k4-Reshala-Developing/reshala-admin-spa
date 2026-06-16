@@ -34,14 +34,16 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_TAILSCALE_IP }} << 'EOF'
             cd ${{ env.PROJECT_ROOT }}/${{ env.SERVICE_NAME }}
 
-            echo "API_BASE_URL=${{ env.API_BASE_URL }}" > .env
-            echo "MINIO_URL=${{ env.MINIO_URL }}" > .env
-            echo "RABBIT_URL=${{ env.RABBIT_URL }}" > .env
-            echo "SWAGGER_URL=${{ env.SWAGGER_URL }}" > .env
-            echo "LOGIN_URL=${{ env.LOGIN_URL }}" > .env
-            echo "DOZZLE_URL=${{ env.DOZZLE_URL }}" > .env
+            cat > .env << 'ENVEOF'
+            API_BASE_URL=${{ env.API_BASE_URL }}
+            MINIO_URL=${{ env.MINIO_URL }}
+            RABBIT_URL=${{ env.RABBIT_URL }}
+            SWAGGER_URL=${{ env.SWAGGER_URL }}
+            LOGIN_URL=${{ env.LOGIN_URL }}
+            DOZZLE_URL=${{ env.DOZZLE_URL }}
+            ENVEOF
 
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
-            docker compose up --build -d --remove-orphans
+            docker compose --env-file .env up --build -d --remove-orphans
           EOF
