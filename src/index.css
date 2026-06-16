@@ -1,17 +1,26 @@
 :root {
-  --bg-main: #0a0a0c;
-  --bg-card: #141417;
-  --bg-sidebar: #111113;
-  --accent: #6366f1;
-  --accent-hover: #4f46e5;
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --border: #27272a;
-  --glass: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  /* Default: Dark Theme (from Screenshot 1) */
+  --bg-main: #08090f;
+  --bg-sidebar: #0c0d16;
+  --bg-card: #131422;
+  --bg-stats-card: #18182b;
+  --accent: #2563eb; /* Royal blue */
+  --accent-hover: #1d4ed8;
+  --text-primary: #ffffff;
+  --text-secondary: #8a8fa3;
+  --text-muted: #62677b;
+  --border: #1a1c2e;
+  --glass: rgba(255, 255, 255, 0.02);
+  --glass-border: rgba(255, 255, 255, 0.05);
   --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.12);
   --error: #ef4444;
+  --nav-active-bg: rgba(37, 99, 235, 0.15);
+  --nav-active-text: #60a5fa;
+  --bg-input: #151622;
+  --login-bg: radial-gradient(circle at top right, #18192d, #08090f);
+  --focus-shadow: rgba(37, 99, 235, 0.25);
+  --btn-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
   
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   line-height: 1.5;
@@ -20,6 +29,37 @@
   background-color: var(--bg-main);
   color: var(--text-primary);
 }
+
+:root[data-theme="light"] {
+  /* Light Theme (from Screenshot 2) */
+  --bg-main: #f7f8fa;
+  --bg-sidebar: #ffffff;
+  --bg-card: #ffffff;
+  --bg-stats-card: #f3f4fa;
+  --accent: #002060; /* Dark navy from logo */
+  --accent-hover: #0b1c3f;
+  --text-primary: #0d1b3e; /* Deep navy text */
+  --text-secondary: #5c6479; /* Slate grey */
+  --text-muted: #9ca3af;
+  --border: #e2e8f0;
+  --glass: rgba(0, 0, 0, 0.01);
+  --glass-border: rgba(0, 0, 0, 0.06);
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.08);
+  --error: #ef4444;
+  --nav-active-bg: rgba(0, 32, 96, 0.08);
+  --nav-active-text: #002060;
+  --bg-input: #ffffff;
+  --login-bg: radial-gradient(circle at top right, #e2e8f0, #f7f8fa);
+  --focus-shadow: rgba(0, 32, 96, 0.15);
+  --btn-shadow: 0 4px 12px rgba(0, 32, 96, 0.2);
+  
+  color-scheme: light;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+}
+
+
 
 * {
   box-sizing: border-box;
@@ -131,7 +171,7 @@ body {
 .btn-primary:hover {
   background: var(--accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: var(--btn-shadow);
 }
 
 /* Forms */
@@ -149,19 +189,19 @@ body {
 
 .form-input {
   width: 100%;
-  background: #1a1a1e;
+  background: var(--bg-input);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
   padding: 0.75rem;
   color: var(--text-primary);
   font-size: 0.9375rem;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .form-input:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 0 2px var(--focus-shadow);
 }
 
 /* Login Page specifically */
@@ -170,7 +210,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at top right, #1e1b4b, #0a0a0c);
+  background: var(--login-bg);
 }
 
 .login-card {
@@ -187,9 +227,9 @@ body {
 /* Iframe Container */
 .iframe-container {
   width: 100%;
-  height: calc(100vh - 64px); /* Header height */
+  height: 100%;
   border: none;
-  background: white; /* Often useful to see iframe loading */
+  background: transparent;
 }
 
 .header {
@@ -201,3 +241,62 @@ body {
   padding: 0 1.5rem;
   background: var(--bg-card);
 }
+
+/* Statistics Styles */
+.stats-header {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.stats-card {
+  background: var(--bg-stats-card);
+  border: 1px solid var(--glass-border);
+  border-radius: 1.25rem;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.stat-item {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.stat-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 15%;
+  height: 70%;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Custom Navigation Highlight */
+.nav-link.active {
+  background: var(--nav-active-bg);
+  color: var(--nav-active-text);
+  border-left: 3px solid var(--accent);
+}
+
