@@ -34,15 +34,13 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_TAILSCALE_IP }} << 'EOF'
             cd ${{ env.PROJECT_ROOT }}/${{ env.SERVICE_NAME }}
 
-            cat > .env << 'ENVEOF'
-            BACKEND_URL=${{ secrets.BACKEND_URL }}
-            API_BASE_URL=${{ secrets.API_BASE_URL }}
-            LOGIN_URL=${{ secrets.LOGIN_URL }}
-            MINIO_URL=${{ secrets.MINIO_URL }}
-            RABBIT_URL=${{ secrets.RABBIT_URL }}
-            SWAGGER_URL=${{ secrets.SWAGGER_URL }}
-            DOZZLE_URL=${{ secrets.DOZZLE_URL }}
-            ENVEOF
+            echo "BACKEND_URL=${{ secrets.BACKEND_URL }}" > .env
+            echo "API_BASE_URL=${{ secrets.API_BASE_URL }}" >> .env
+            echo "LOGIN_URL=${{ secrets.LOGIN_URL }}" >> .env
+            echo "MINIO_URL=${{ secrets.MINIO_URL }}" >> .env
+            echo "RABBIT_URL=${{ secrets.RABBIT_URL }}" >> .env
+            echo "SWAGGER_URL=${{ secrets.SWAGGER_URL }}" >> .env
+            echo "DOZZLE_URL=${{ secrets.DOZZLE_URL }}" >> .env
 
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
