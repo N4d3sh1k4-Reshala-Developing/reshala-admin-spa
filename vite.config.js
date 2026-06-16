@@ -7,6 +7,18 @@ export default defineConfig(({ mode }) => {
   
   return {
     plugins: [react()],
+    server: {
+      host: '127.0.0.1',
+      port: 5173,
+      strictPort: false,
+      proxy: {
+        '/api': {
+          target: 'http://localhost:8180',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, '/api'),
+        }
+      }
+    },
     define: {
       'import.meta.env.API_BASE_URL': JSON.stringify(env.API_BASE_URL || ''),
       'import.meta.env.MINIO_URL': JSON.stringify(env.MINIO_URL || ''),

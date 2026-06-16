@@ -74,7 +74,7 @@ const LoginPage = () => {
               <input
                 type="email"
                 className="form-input"
-                placeholder="admin@email.gov"
+                placeholder="your@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{ paddingLeft: '2.5rem' }}

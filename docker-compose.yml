@@ -8,9 +8,12 @@ services:
     ports:
       - "8186:80"
     environment:
-      - API_BASE_URL=${API_BASE_URL}
-      - MINIO_URL=${MINIO_URL}
-      - RABBIT_URL=${RABBIT_URL}
-      - SWAGGER_URL=${SWAGGER_URL}
-      - LOGIN_URL=${LOGIN_URL}
-      - DOZZLE_URL=${DOZZLE_URL}
+      # Backend URL for nginx proxy (where API requests are forwarded)
+      - BACKEND_URL=${BACKEND_URL:-http://host.docker.internal:8180/api}
+      # Frontend environment variables
+      - API_BASE_URL=${API_BASE_URL:-/api}
+      - LOGIN_URL=${LOGIN_URL:-/v0/auth/login}
+      - MINIO_URL=${MINIO_URL:-/admin/minio/}
+      - RABBIT_URL=${RABBIT_URL:-/admin/rabbit/}
+      - SWAGGER_URL=${SWAGGER_URL:-/admin/swagger/index.html}
+      - DOZZLE_URL=${DOZZLE_URL:-/admin/monitoring/}
